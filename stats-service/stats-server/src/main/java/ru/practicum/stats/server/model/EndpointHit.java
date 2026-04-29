@@ -25,19 +25,19 @@ import java.time.LocalDateTime;
 @Builder
 public class EndpointHit {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name = "app", nullable = false, length = 64)
-	private String app;
+    @Column(name = "app", nullable = false, length = 64)
+    private String app;
 
-	@Column(name = "uri", nullable = false, length = 512)
-	private String uri;
+    @Column(name = "uri", nullable = false, length = 512)
+    private String uri;
 
-	@Column(name = "ip", nullable = false, length = 64)
-	private String ip;
+    @Column(name = "ip", nullable = false, length = 64)
+    private String ip;
 
-	@Column(name = "hit_timestamp", nullable = false)
-	private LocalDateTime timestamp;
+    @Column(name = "hit_timestamp", nullable = false)
+    private LocalDateTime timestamp;
 }

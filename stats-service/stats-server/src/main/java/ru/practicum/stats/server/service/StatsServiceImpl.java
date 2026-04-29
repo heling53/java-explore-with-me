@@ -18,30 +18,30 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class StatsServiceImpl implements StatsService {
 
-	private final StatsRepository repository;
+    private final StatsRepository repository;
 
-	@Override
-	@Transactional
-	public void saveHit(EndpointHitDto dto) {
-		repository.save(StatsMapper.toEntity(dto));
-	}
+    @Override
+    @Transactional
+    public void saveHit(EndpointHitDto dto) {
+        repository.save(StatsMapper.toEntity(dto));
+    }
 
-	@Override
-	public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-		if (start == null || end == null || start.isAfter(end)) {
-			throw new BadRequestException("Start must be before end and both must be provided");
-		}
-		List<ViewStats> stats;
-		boolean hasUris = uris != null && !uris.isEmpty();
-		if (unique) {
-			stats = hasUris
-					? repository.findUniqueStatsByUris(start, end, uris)
-					: repository.findUniqueStats(start, end);
-		} else {
-			stats = hasUris
-					? repository.findStatsByUris(start, end, uris)
-					: repository.findStats(start, end);
-		}
-		return stats.stream().map(StatsMapper::toDto).toList();
-	}
+    @Override
+    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+        if (start == null || end == null || start.isAfter(end)) {
+            throw new BadRequestException("Start must be before end and both must be provided");
+        }
+        List<ViewStats> stats;
+        boolean hasUris = uris != null && !uris.isEmpty();
+        if (unique) {
+            stats = hasUris
+                    ? repository.findUniqueStatsByUris(start, end, uris)
+                    : repository.findUniqueStats(start, end);
+        } else {
+            stats = hasUris
+                    ? repository.findStatsByUris(start, end, uris)
+                    : repository.findStats(start, end);
+        }
+        return stats.stream().map(StatsMapper::toDto).toList();
+    }
 }

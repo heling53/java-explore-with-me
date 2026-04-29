@@ -24,22 +24,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StatsController {
 
-	private final StatsService statsService;
+    private final StatsService statsService;
 
-	@PostMapping("/hit")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void hit(@Valid @RequestBody EndpointHitDto dto) {
-		log.info("POST /hit: app={}, uri={}, ip={}", dto.getApp(), dto.getUri(), dto.getIp());
-		statsService.saveHit(dto);
-	}
+    @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void hit(@Valid @RequestBody EndpointHitDto dto) {
+        log.info("POST /hit: app={}, uri={}, ip={}", dto.getApp(), dto.getUri(), dto.getIp());
+        statsService.saveHit(dto);
+    }
 
-	@GetMapping("/stats")
-	public List<ViewStatsDto> getStats(
-			@RequestParam @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) LocalDateTime start,
-			@RequestParam @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) LocalDateTime end,
-			@RequestParam(required = false) List<String> uris,
-			@RequestParam(defaultValue = "false") boolean unique) {
-		log.info("GET /stats: start={}, end={}, uris={}, unique={}", start, end, uris, unique);
-		return statsService.getStats(start, end, uris, unique);
-	}
+    @GetMapping("/stats")
+    public List<ViewStatsDto> getStats(
+            @RequestParam @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) LocalDateTime start,
+            @RequestParam @DateTimeFormat(pattern = Constants.DATE_TIME_PATTERN) LocalDateTime end,
+            @RequestParam(required = false) List<String> uris,
+            @RequestParam(defaultValue = "false") boolean unique) {
+        log.info("GET /stats: start={}, end={}, uris={}, unique={}", start, end, uris, unique);
+        return statsService.getStats(start, end, uris, unique);
+    }
 }

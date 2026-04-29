@@ -13,9 +13,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ViewStats {
 
-	private String app;
+    private String app;
 
-	private String uri;
+    private String uri;
 
-	private Long hits;
+    private Long hits;
 }

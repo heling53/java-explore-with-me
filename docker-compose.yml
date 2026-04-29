@@ -1,14 +1,65 @@
 services:
   stats-server:
+    build: ./stats-service/stats-server
+    image: ewm-stats-server
+    container_name: ewm-stats-server
     ports:
       - "9090:9090"
+    depends_on:
+      stats-db:
+        condition: service_healthy
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://stats-db:5432/ewm_stats
+      - POSTGRES_USER=stats
+      - POSTGRES_PASSWORD=stats
 
   stats-db:
     image: postgres:16.1
+    container_name: ewm-stats-db
+    environment:
+      - POSTGRES_DB=ewm_stats
+      - POSTGRES_USER=stats
+      - POSTGRES_PASSWORD=stats
+    volumes:
+      - stats-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stats -d ewm_stats"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   ewm-service:
+    build: ./main-service
+    image: ewm-main-service
+    container_name: ewm-main-service
     ports:
       - "8080:8080"
+    depends_on:
+      ewm-db:
+        condition: service_healthy
+      stats-server:
+        condition: service_started
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://ewm-db:5432/ewm_main
+      - POSTGRES_USER=ewm
+      - POSTGRES_PASSWORD=ewm
+      - STATS_SERVER_URL=http://stats-server:9090
 
   ewm-db:
     image: postgres:16.1
+    container_name: ewm-main-db
+    environment:
+      - POSTGRES_DB=ewm_main
+      - POSTGRES_USER=ewm
+      - POSTGRES_PASSWORD=ewm
+    volumes:
+      - ewm-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ewm -d ewm_main"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  stats-db-data:
+  ewm-db-data:

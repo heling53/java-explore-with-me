@@ -4,11 +4,11 @@ import ru.practicum.stats.dto.EndpointHitDto;
 import ru.practicum.stats.dto.ViewStatsDto;
 import ru.practicum.stats.server.model.EndpointHit;
 import ru.practicum.stats.server.model.ViewStats;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StatsMapper {
-
-    private StatsMapper() {
-    }
 
     public static EndpointHit toEntity(EndpointHitDto dto) {
         return EndpointHit.builder()
